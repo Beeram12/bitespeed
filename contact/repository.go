@@ -48,7 +48,7 @@ func (r *repo) FindByEmailOrPhone(ctx context.Context, email *string, phone *str
 		args = append(args, *email)
 	}
 	if phone != nil {
-		clauses = append(clauses, "phone = ?")
+		clauses = append(clauses, "phone_number = ?")
 		args = append(args, *phone)
 	}
 
@@ -68,7 +68,7 @@ func (r *repo) FindByEmailOrPhone(ctx context.Context, email *string, phone *str
 	query = r.db.Rebind(query)
 
 	var contacts []Contact
-	if err := sqlx.SelectContext(ctx, r.use(), contacts, query, args...); err != nil {
+	if err := sqlx.SelectContext(ctx, r.use(), &contacts, query, args...); err != nil {
 		return nil, err
 	}
 	return contacts, nil

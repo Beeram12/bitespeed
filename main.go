@@ -25,6 +25,10 @@ func main() {
 	}
 	defer store.Close()
 
+	if err := db.EnsureSchema(store.DB); err != nil {
+		log.Fatalf("failed to ensure schema: %v", err)
+	}
+
 	router := gin.Default()
 
 	httpapi.RegisterRoutes(router, store)
