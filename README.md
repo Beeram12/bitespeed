@@ -81,6 +81,6 @@ curl -s -X POST https://bitspeed-production-ab44.up.railway.app/identify \
   }'
 ```
 
-You can send additional requests with overlapping and non‑overlapping emails and phone numbers to observe how the service merges contacts and updates the primary/secondary relationships in the Neon‑hosted PostgreSQL database.
-
+You can send additional requests with overlapping and non‑overlapping emails and phone numbers to observe how the service merges contacts and updates the primary/secondary relationships in the Neon‑hosted PostgreSQL database.  
+The same endpoint can also be tested using tools like Postman or Hoppscotch by configuring a `POST` request to `/identify` with a JSON body in the format shown above.
 
