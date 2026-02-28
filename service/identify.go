@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/Beeram12/fluxkart-identify/contact"
+	"github.com/Beeram12/bitespeed-identify/contact"
 	"github.com/jmoiron/sqlx"
 )
 
