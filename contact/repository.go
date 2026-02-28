@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx/reflectx"
 )
 
+// Repository defines the operations required for working with contacts in storage.
 type Repository interface {
 	WithTx(tx *sqlx.Tx) Repository
 	FindByEmailOrPhone(ctx context.Context, email *string, phone *string) ([]Contact, error)
@@ -21,11 +22,15 @@ type repo struct {
 	tx *sqlx.Tx
 }
 
+// NewRepository constructs a Repository backed by the provided sqlx.DB and
+// configures struct field mapping based on the `db` struct tags.
 func NewRepository(db *sqlx.DB) Repository {
 	db.Mapper = reflectx.NewMapperFunc("db", sqlx.NameMapper)
 	return &repo{db: db}
 }
 
+// use chooses either the active transaction or the base DB handle
+// as the execution context for queries.
 func (r *repo) use() sqlx.ExtContext {
 	if r.tx != nil {
 		return r.tx
@@ -33,12 +38,13 @@ func (r *repo) use() sqlx.ExtContext {
 	return r.db
 }
 
-// WithTx returns a Repository that uses the provided SQL transaction.
+// WithTx returns a new Repository instance that routes all calls through
+// the provided SQL transaction
 func (r *repo) WithTx(tx *sqlx.Tx) Repository {
 	return &repo{db: r.db, tx: tx}
 }
 
-// FindByEmailOrPhone finds list of contacts using email and phone number
+// FindByEmailOrPhone returns all contacts that match the given email, phone number
 func (r *repo) FindByEmailOrPhone(ctx context.Context, email *string, phone *string) ([]Contact, error) {
 	args := []interface{}{}
 	clauses := []string{}
@@ -74,7 +80,7 @@ func (r *repo) FindByEmailOrPhone(ctx context.Context, email *string, phone *str
 	return contacts, nil
 }
 
-// FindByIds finds contacts using their ids
+// FindByIDs looks up contacts by a list of IDs and returns the matching rows.
 func (r *repo) FindByIDs(ctx context.Context, ids []int64) ([]Contact, error) {
 	if len(ids) == 0 {
 		return []Contact{}, nil
@@ -97,6 +103,7 @@ func (r *repo) FindByIDs(ctx context.Context, ids []int64) ([]Contact, error) {
 	return contacts, nil
 }
 
+// Create inserts a new contact row and populates the struct with the generated ID.
 func (r *repo) Create(ctx context.Context, c *Contact) error {
 	query := `
 		INSERT INTO contacts (phone_number, email, linked_id, link_precedence, created_at, updated_at, deleted_at)
@@ -131,6 +138,7 @@ func (r *repo) Create(ctx context.Context, c *Contact) error {
 	return errors.New("no id returned from insert")
 }
 
+// Update persists changes to an existing contact identified by its ID.
 func (r *repo) Update(ctx context.Context, c *Contact) error {
 	if c.ID == 0 {
 		return errors.New("id is required for update")

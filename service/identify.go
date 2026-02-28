@@ -27,6 +27,8 @@ type IdentifyService struct {
 	repo contact.Repository
 }
 
+// NewIdentifyService constructs an IdentifyService with access to the given
+// database handle and contact repository implementation.
 func NewIdentifyService(db *sqlx.DB, repo contact.Repository) *IdentifyService {
 	return &IdentifyService{
 		db:   db,
@@ -46,6 +48,9 @@ type IdentifyResponse struct {
 	SecondaryContactIDs []int64
 }
 
+// Identify resolves the primary contact and related secondary contacts for
+// the given email and/or phone number, applying the identity reconciliation
+// rules described in the Bitespeed problem statement.
 func (s *IdentifyService) Identify(ctx context.Context, req IdentifyRequest) (*IdentifyResponse, error) {
 	if req.Email == nil && req.PhoneNumber == nil {
 		return nil, errors.New("either email or phoneNumber is required")

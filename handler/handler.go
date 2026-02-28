@@ -25,6 +25,8 @@ type identifyContactResponse struct {
 	SecondaryContactIDs []int64  `json:"secondaryContactIds"`
 }
 
+// RegisterRoutes attaches the HTTP handlers for this service to the given Gin engine.
+// It constructs the contact repository and identify service, then mounts POST /identify.
 func RegisterRoutes(r *gin.Engine, store *db.Store) {
 	contactRepo := contact.NewRepository(store.DB)
 	svc := service.NewIdentifyService(store.DB, contactRepo)

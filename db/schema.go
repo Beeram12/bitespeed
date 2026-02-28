@@ -6,6 +6,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// EnsureSchema makes sure that the contacts table and its supporting indexes
+// exist in the target database. It is safe to call on every application start.
 func EnsureSchema(db *sqlx.DB) error {
 	if db == nil {
 		return fmt.Errorf("db is nil")

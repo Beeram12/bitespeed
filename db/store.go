@@ -10,6 +10,8 @@ type Store struct {
 	DB *sqlx.DB
 }
 
+// NewPostgresStore creates and configures a sqlx-backed Store using the provided DSN.
+// It establishes the connection and applies basic pool settings.
 func NewPostgresStore(dsn string) (*Store, error) {
 	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {
@@ -25,6 +27,7 @@ func NewPostgresStore(dsn string) (*Store, error) {
 	}, nil
 }
 
+// Close releases the underlying database connection resources, if any.
 func (s *Store) Close() error {
 	if s == nil || s.DB == nil {
 		return nil

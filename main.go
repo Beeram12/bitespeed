@@ -13,6 +13,8 @@ import (
 	httpapi "github.com/Beeram12/bitespeed-identify/handler"
 )
 
+// main is the application entrypoint. It wires the database, HTTP router,
+// and starts the Gin server that exposes the /identify endpoint.
 func main() {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {

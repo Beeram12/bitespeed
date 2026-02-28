@@ -2,9 +2,10 @@ package contact
 
 import "time"
 
+// LinkPrecedence describes whether a contact is the primary record for a
+// cluster of identities or a secondary that points back to a primary.
 type LinkPrecedence string
 
-// defining enum for 'primary' and 'seconday'
 const (
 	LinkPrecedencePrimary   LinkPrecedence = "primary"
 	LinkPrecedenceSecondary LinkPrecedence = "secondary"
